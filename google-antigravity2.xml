@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<Container version="2">
+ <Name>google-antigravity2</Name>
+ <Repository>antigravity-desktop:2.0</Repository>
+ <Registry/>
+ <Network>bridge</Network>
+ <MyIP/>
+ <Shell>bash</Shell>
+ <Privileged>false</Privileged>
+ <Support/>
+ <Project/>
+ <Overview>Google Antigravity 2.0 - Advanced development environment and AI agent orchestrator in a container with high-performance GUI access via browser (KasmVNC by Linuxserver.io).</Overview>
+ <Category>Development: IDE: Automation:</Category>
+ <WebUI>http://[IP]:[PORT:3000]</WebUI>
+ <TemplateURL/>
+ <Icon>https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/linuxserver-logo.png</Icon>
+
+ <ExtraParams>--security-opt seccomp=unconfined</ExtraParams>
+
+ <PostArgs/>
+ <CPUset/>
+ <DateInstalled/>
+ <DonateText/>
+ <DonateLink/>
+ <Description>Google Antigravity 2.0 - Advanced development environment and AI agent orchestrator in a container with high-performance GUI access via browser (KasmVNC by Linuxserver.io).</Description>
+
+ <Networking>
+ <Mode>bridge</Mode>
+ <Publish>
+ <Port>
+ <HostPort>3000</HostPort>
+ <ContainerPort>3000</ContainerPort>
+ <Protocol>tcp</Protocol>
+ </Port>
+ <Port>
+ <HostPort>3001</HostPort>
+ <ContainerPort>3001</ContainerPort>
+ <Protocol>tcp</Protocol>
+ </Port>
+ </Publish>
+ </Networking>
+
+ <Data>
+ <Volume>
+ <HostDir>/mnt/user/appdata/google-antigravity2</HostDir>
+ <ContainerDir>/config</ContainerDir>
+ <Mode>rw</Mode>
+ </Volume>
+ <Volume>
+ <HostDir>/mnt/user/projects</HostDir>
+ <ContainerDir>/workspace</ContainerDir>
+ <Mode>rw</Mode>
+ </Volume>
+ </Data>
+
+ <Environment>
+ <Variable>
+ <Value>99</Value>
+ <Name>PUID</Name>
+ <Mode/>
+ </Variable>
+ <Variable>
+ <Value>100</Value>
+ <Name>PGID</Name>
+ <Mode/>
+ </Variable>
+ <Variable>
+ <Value>Europe/Warsaw</Value>
+ <Name>TZ</Name>
+ <Mode/>
+ </Variable>
+ <Variable>
+ <Value>Google Antigravity 2</Value>
+ <Name>TITLE</Name>
+ <Mode/>
+ </Variable>
+ </Environment>
+
+ <Config Name="WebUI HTTP Port" Target="3000" Default="3000" Mode="tcp" Description="Browser access port (HTTP)" Type="Port" Display="always" Required="true" Mask="false">3000</Config>
+ <Config Name="WebUI HTTPS Port" Target="3001" Default="3001" Mode="tcp" Description="Browser access port (HTTPS)" Type="Port" Display="always" Required="false" Mask="false">3001</Config>
+
+ <Config Name="Appdata Path" Target="/config" Default="/mnt/user/appdata/google-antigravity2" Description="Container configuration path" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/google-antigravity2</Config>
+ <Config Name="Workspace Path" Target="/workspace" Default="/mnt/user/projects/" Description="Main directory with projects and source code" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/projects/</Config>
+
+ <Config Name="PUID" Target="PUID" Default="99" Description="Unraid User ID (nobody = 99)" Type="Variable" Display="advanced" Required="true" Mask="false">99</Config>
+ <Config Name="PGID" Target="PGID" Default="100" Description="Unraid Group ID (users = 100)" Type="Variable" Display="advanced" Required="true" Mask="false">100</Config>
+ <Config Name="Timezone" Target="TZ" Default="Europe/Warsaw" Description="Timezone" Type="Variable" Display="advanced" Required="false" Mask="false">Europe/Warsaw</Config>
+ <Config Name="Window Title" Target="TITLE" Default="Google Antigravity 2" Description="Browser tab title" Type="Variable" Display="advanced" Required="false" Mask="false">Google Antigravity 2</Config>
+</Container>
