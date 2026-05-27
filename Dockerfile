@@ -1,4 +1,4 @@
-FROM lscr.io/linuxserver/baseimage-kasmvnc:ubuntu24.04
+FROM lscr.io/linuxserver/kasm:latest
 
 # Set browser tab title
 ENV TITLE="Google Antigravity 2"
