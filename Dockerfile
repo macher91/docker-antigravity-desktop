@@ -13,6 +13,8 @@ ENV TITLE="Google Antigravity 2" \
     NO_GAMEPAD=true \
     PIXELFLUX_WAYLAND=true
 
+ARG ANTIGRAVITY_URL="https://storage.googleapis.com/antigravity-public/antigravity-hub/2.0.10-5119448496078848/linux-x64/Antigravity.tar.gz"
+
 RUN \
   echo "**** add icon ****" && \
   curl -o \
@@ -26,12 +28,17 @@ RUN \
     chromium-l10n \
     git \
     gnome-keyring \
+    gtk3-engines-breeze \
+    libgtk-3-0 \
     ssh-askpass \
     stterm && \
   echo "**** install antigravity ****" && \
   mkdir -p /opt/antigravity && \
-  echo '#!/bin/bash\nxterm -e "echo Antigravity 2 Agent Workspace; bash"' > /opt/antigravity/antigravity && \
+  curl -L -o /tmp/Antigravity.tar.gz "${ANTIGRAVITY_URL}" && \
+  tar xzf /tmp/Antigravity.tar.gz -C /opt/antigravity --strip-components=1 && \
+  rm /tmp/Antigravity.tar.gz && \
   chmod +x /opt/antigravity/antigravity && \
+  chmod 4755 /opt/antigravity/chrome-sandbox && \
   echo "**** container tweaks ****" && \
   mv \
     /usr/bin/chromium \
