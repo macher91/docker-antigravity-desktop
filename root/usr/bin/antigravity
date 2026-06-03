@@ -1,6 +1,6 @@
 #! /bin/bash
 
-BIN=/usr/share/code/bin/code
+BIN=/opt/antigravity/antigravity
 
 # Wayland check
 if pgrep labwc > /dev/null 2>&1; then
@@ -8,6 +8,5 @@ if pgrep labwc > /dev/null 2>&1; then
 fi
 
 dbus-launch ${BIN} \
-  --no-sandbox \
   ${WAYLAND} \
    "$@"

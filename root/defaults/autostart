@@ -1,2 +1,2 @@
 #! /bin/bash
-dbus-launch code
+dbus-launch /opt/antigravity/antigravity
