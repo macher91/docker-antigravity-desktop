@@ -5,4 +5,4 @@ gio mime x-scheme-handler/https chromium.desktop
 gio mime application/x-terminal-emulator foot.desktop
 gio mime inode/directory caja-browser.desktop
 
-dbus-launch /opt/antigravity/antigravity
+dbus-launch /usr/bin/antigravity
