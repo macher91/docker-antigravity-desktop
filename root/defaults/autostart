@@ -1,4 +1,2 @@
-# Script executed automatically within the KasmVNC environment
-
-# Run Google Antigravity 2 in the background
-/opt/antigravity/antigravity &
+#! /bin/bash
+dbus-launch code
