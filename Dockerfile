@@ -13,7 +13,7 @@ ENV TITLE="Google Antigravity 2" \
     NO_GAMEPAD=true \
     PIXELFLUX_WAYLAND=true
 
-ARG ANTIGRAVITY_URL="https://storage.googleapis.com/antigravity-public/antigravity-hub/2.0.10-5119448496078848/linux-x64/Antigravity.tar.gz"
+ARG ANTIGRAVITY_URL="https://storage.googleapis.com/antigravity-public/antigravity-hub/2.0.11-5731625217163264/linux-x64/Antigravity.tar.gz"
 
 RUN \
   echo "**** add icon ****" && \
