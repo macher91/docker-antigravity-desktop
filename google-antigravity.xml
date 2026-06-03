@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Container version="2">
- <Name>google-antigravity2</Name>
+ <Name>google-antigravity</Name>
  <Repository>ghcr.io/macher91/docker-antigravity-desktop:latest</Repository>
  <Registry/>
  <Network>bridge</Network>
@@ -37,7 +37,7 @@
 
  <Data>
  <Volume>
- <HostDir>/mnt/user/appdata/google-antigravity2</HostDir>
+ <HostDir>/mnt/user/appdata/google-antigravity</HostDir>
  <ContainerDir>/config</ContainerDir>
  <Mode>rw</Mode>
  </Volume>
@@ -73,7 +73,7 @@
 
  <Config Name="WebUI HTTPS Port" Target="3001" Default="3001" Mode="tcp" Description="Browser access port (HTTPS)" Type="Port" Display="always" Required="true" Mask="false">3001</Config>
 
- <Config Name="Appdata Path" Target="/config" Default="/mnt/user/appdata/google-antigravity2" Description="Container configuration path" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/google-antigravity2</Config>
+ <Config Name="Appdata Path" Target="/config" Default="/mnt/user/appdata/google-antigravity" Description="Container configuration path" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/google-antigravity</Config>
  <Config Name="Workspace Path" Target="/workspace" Default="/mnt/user/projects/" Description="Main directory with projects and source code" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/projects/</Config>
 
  <Config Name="PUID" Target="PUID" Default="99" Description="Unraid User ID (nobody = 99)" Type="Variable" Display="advanced" Required="true" Mask="false">99</Config>
