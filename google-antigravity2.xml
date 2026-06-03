@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Container version="2">
  <Name>google-antigravity2</Name>
- <Repository>antigravity-desktop:2.0</Repository>
+ <Repository>ghcr.io/macher91/docker-antigravity-desktop:latest</Repository>
  <Registry/>
  <Network>bridge</Network>
  <MyIP/>
@@ -9,9 +9,9 @@
  <Privileged>false</Privileged>
  <Support/>
  <Project/>
- <Overview>Google Antigravity 2.0 - Advanced development environment and AI agent orchestrator in a container with high-performance GUI access via browser (KasmVNC by Linuxserver.io).</Overview>
+ <Overview>Google Antigravity 2.0 - Advanced development environment and AI agent orchestrator in a container with high-performance GUI access via browser (Selkies by Linuxserver.io).</Overview>
  <Category>Development: IDE: Automation:</Category>
- <WebUI>http://[IP]:[PORT:3000]</WebUI>
+ <WebUI>http://[IP]:[PORT:3001]</WebUI>
  <TemplateURL/>
  <Icon>https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/linuxserver-logo.png</Icon>
 
@@ -22,16 +22,11 @@
  <DateInstalled/>
  <DonateText/>
  <DonateLink/>
- <Description>Google Antigravity 2.0 - Advanced development environment and AI agent orchestrator in a container with high-performance GUI access via browser (KasmVNC by Linuxserver.io).</Description>
+ <Description>Google Antigravity 2.0 - Advanced development environment and AI agent orchestrator in a container with high-performance GUI access via browser (Selkies by Linuxserver.io).</Description>
 
  <Networking>
  <Mode>bridge</Mode>
  <Publish>
- <Port>
- <HostPort>3000</HostPort>
- <ContainerPort>3000</ContainerPort>
- <Protocol>tcp</Protocol>
- </Port>
  <Port>
  <HostPort>3001</HostPort>
  <ContainerPort>3001</ContainerPort>
@@ -76,8 +71,7 @@
  </Variable>
  </Environment>
 
- <Config Name="WebUI HTTP Port" Target="3000" Default="3000" Mode="tcp" Description="Browser access port (HTTP)" Type="Port" Display="always" Required="true" Mask="false">3000</Config>
- <Config Name="WebUI HTTPS Port" Target="3001" Default="3001" Mode="tcp" Description="Browser access port (HTTPS)" Type="Port" Display="always" Required="false" Mask="false">3001</Config>
+ <Config Name="WebUI HTTPS Port" Target="3001" Default="3001" Mode="tcp" Description="Browser access port (HTTPS)" Type="Port" Display="always" Required="true" Mask="false">3001</Config>
 
  <Config Name="Appdata Path" Target="/config" Default="/mnt/user/appdata/google-antigravity2" Description="Container configuration path" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/google-antigravity2</Config>
  <Config Name="Workspace Path" Target="/workspace" Default="/mnt/user/projects/" Description="Main directory with projects and source code" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/projects/</Config>

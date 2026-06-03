@@ -1,38 +1,50 @@
-FROM lscr.io/linuxserver/kasm:latest
+# syntax=docker/dockerfile:1
 
-# Set browser tab title
-ENV TITLE="Google Antigravity 2"
+FROM ghcr.io/linuxserver/baseimage-selkies:debiantrixie
 
-# Install system dependencies
-# This is where the downloading and unpacking of the actual Google package
-# will eventually take place:
-#   curl -o /tmp/antigravity.tar.gz https://antigravity.google/download/linux/amd64/...
-#
-# Below is a placeholder for environment structure building purposes:
+# set version label
+ARG BUILD_DATE
+ARG VERSION
+LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
+LABEL maintainer="thelamer"
+
+# title
+ENV TITLE="Google Antigravity 2" \
+    NO_GAMEPAD=true \
+    PIXELFLUX_WAYLAND=true
+
 RUN \
-  echo "** Updating and installing dependencies **" && \
+  echo "**** install packages ****" && \
   apt-get update && \
-  apt-get install -y --no-install-recommends \
+  apt-get install --no-install-recommends -y \
+    caja \
+    chromium \
+    chromium-l10n \
     curl \
-    wget \
     git \
-    libnss3 \
-    libgbm1 \
+    gnome-keyring \
     libasound2t64 \
-    libgtk-3-0 && \
-  echo "** Installing Antigravity 2 **" && \
+    libgbm1 \
+    libgtk-3-0 \
+    libnss3 \
+    ssh-askpass \
+    stterm \
+    wget && \
+  echo "**** install antigravity ****" && \
   mkdir -p /opt/antigravity && \
   echo '#!/bin/bash\nxterm -e "echo Antigravity 2 Agent Workspace; bash"' > /opt/antigravity/antigravity && \
   chmod +x /opt/antigravity/antigravity && \
-  echo "** Cleaning up **" && \
-  apt-get clean && \
-  rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
+  echo "**** cleanup ****" && \
+  apt-get autoclean && \
+  rm -rf \
+    /var/lib/apt/lists/* \
+    /var/tmp/* \
+    /tmp/*
 
-# Copy local configuration files (e.g., autostart for Openbox)
+# add local files
 COPY /root /
 
-# Standard linuxserver.io image ports (3000 HTTP, 3001 HTTPS)
-EXPOSE 3000 3001
+# ports and volumes
+EXPOSE 3001
 
-# Volume declarations for configuration and code
-VOLUME /config /workspace
+VOLUME /config
