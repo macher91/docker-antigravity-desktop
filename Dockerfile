@@ -6,7 +6,7 @@ FROM ghcr.io/linuxserver/baseimage-selkies:debiantrixie
 ARG BUILD_DATE
 ARG VERSION
 LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
-LABEL maintainer="thelamer"
+LABEL maintainer="macher91"
 
 # title
 ENV TITLE="Google Antigravity 2" \
@@ -14,26 +14,25 @@ ENV TITLE="Google Antigravity 2" \
     PIXELFLUX_WAYLAND=true
 
 RUN \
+  echo "**** add icon ****" && \
+  curl -o \
+    /usr/share/selkies/www/icon.png \
+    https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/vscode-logo.png && \
   echo "**** install packages ****" && \
   apt-get update && \
   apt-get install --no-install-recommends -y \
     caja \
     chromium \
     chromium-l10n \
-    curl \
     git \
     gnome-keyring \
-    libasound2t64 \
-    libgbm1 \
-    libgtk-3-0 \
-    libnss3 \
     ssh-askpass \
-    stterm \
-    wget && \
-  echo "**** install antigravity ****" && \
-  mkdir -p /opt/antigravity && \
-  echo '#!/bin/bash\nxterm -e "echo Antigravity 2 Agent Workspace; bash"' > /opt/antigravity/antigravity && \
-  chmod +x /opt/antigravity/antigravity && \
+    stterm && \
+  echo "**** container tweaks ****" && \
+  mv \
+    /usr/bin/chromium \
+    /usr/bin/chromium-real && \
+  printf "Linuxserver.io version: ${VERSION}\nBuild-date: ${BUILD_DATE}" > /build_version && \
   echo "**** cleanup ****" && \
   apt-get autoclean && \
   rm -rf \
@@ -41,7 +40,7 @@ RUN \
     /var/tmp/* \
     /tmp/*
 
-# add local files
+# add local files (openbox menu, chromium/code launchers)
 COPY /root /
 
 # ports and volumes
