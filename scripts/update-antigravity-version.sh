@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 # update-antigravity-version.sh
-# Pobiera listę wersji Antigravity z GCS bucket i aktualizuje Dockerfile
-# z najnowszą wersją linux-x64 tar.gz.
+# Sprawdza najnowszą wersję Antigravity dostępną w GCS bucket.
+# Dockerfile automatycznie pobiera najnowszą wersję podczas builda,
+# więc ten skrypt służy głównie do diagnostyki i monitoringu.
+#
+# Użycie:
+#   ./update-antigravity-version.sh          # sprawdź najnowszą wersję
+#   ./update-antigravity-version.sh --check  # sprawdź czy jest nowsza niż obecna w Dockerfile
 
 set -euo pipefail
 
@@ -12,49 +17,45 @@ GCS_URL="https://storage.googleapis.com/antigravity-public/"
 
 echo "==> Pobieram listę wersji z GCS..."
 
-# Pobierz XML listę bucketów i wyciągnij wszystkie wersje antigravity-hub/linux-x64
-VERSIONS=$(curl -sf "$GCS_URL" | \
-  grep -oP 'antigravity-hub/\K[0-9]+\.[0-9]+\.[0-9]+-[0-9]+(?=/linux-x64/Antigravity\.tar\.gz)' | \
+# Pobierz XML i wyciągnij wszystkie wersje linux-x64
+LATEST_VERSION=$(curl -sf "$GCS_URL" | \
+  grep -oP 'antigravity-hub/\K[0-9]+\.[0-9]+\.[0-9]+-[0-9]+(?=/linux-x64/)' | \
   sort -t. -k1,1n -k2,2n -k3,3n | \
   tail -1)
 
-if [ -z "$VERSIONS" ]; then
+if [ -z "$LATEST_VERSION" ]; then
   echo "ERROR: Nie znaleziono żadnej wersji Antigravity" >&2
   exit 1
 fi
 
-echo "==> Najnowsza wersja: $VERSIONS"
+echo "==> Najnowsza wersja: $LATEST_VERSION"
 
-# Zbuduj nowy URL
-NEW_URL="https://storage.googleapis.com/antigravity-public/antigravity-hub/${VERSIONS}/linux-x64/Antigravity.tar.gz"
+# Sprawdź format (AppImage vs tar.gz)
+APPIMAGE_URL="https://storage.googleapis.com/antigravity-public/antigravity-hub/${LATEST_VERSION}/linux-x64/Antigravity.AppImage"
+TARGZ_URL="https://storage.googleapis.com/antigravity-public/antigravity-hub/${LATEST_VERSION}/linux-x64/Antigravity.tar.gz"
 
-# Sprawdź czy URL jest dostępny
-if ! curl -sfI "$NEW_URL" > /dev/null 2>&1; then
-  echo "ERROR: URL nie istnieje: $NEW_URL" >&2
-  exit 1
-fi
-
-echo "==> URL: $NEW_URL"
-
-# Aktualizuj Dockerfile
-if grep -q "ANTIGRAVITY_URL=" "$DOCKERFILE"; then
-  # Zamień istniejący URL
-  sed -i "s|ARG ANTIGRAVITY_URL=.*|ARG ANTIGRAVITY_URL=\"${NEW_URL}\"|" "$DOCKERFILE"
-  echo "==> Dockerfile zaktualizowany"
+if curl -sfI "$APPIMAGE_URL" > /dev/null 2>&1; then
+  echo "==> Format: AppImage"
+  echo "==> URL: $APPIMAGE_URL"
+elif curl -sfI "$TARGZ_URL" > /dev/null 2>&1; then
+  echo "==> Format: tar.gz"
+  echo "==> URL: $TARGZ_URL"
 else
-  echo "ERROR: Nie znaleziono ARG ANTIGRAVITY_URL w Dockerfile" >&2
+  echo "ERROR: Nie znaleziono pliku dla wersji $LATEST_VERSION" >&2
   exit 1
 fi
 
-# Sprawdź czy jest zmiana
-if git -C "$REPO_DIR" diff --quiet; then
-  echo "==> Brak zmian - Dockerfile już ma najnowszą wersję"
-  exit 0
+# Tryb --check: porównaj z obecną wersją w Dockerfile
+if [[ "${1:-}" == "--check" ]]; then
+  CURRENT=$(grep -oP 'antigravity-hub/\K[0-9]+\.[0-9]+\.[0-9]+(?=-)' "$DOCKERFILE" | head -1 || true)
+  if [ -z "$CURRENT" ]; then
+    # Dockerfile używa dynamicznego wykrywania — brak hardcoded wersji
+    echo "==> Dockerfile używa dynamicznego wykrywania wersji (brak hardcoded URL)"
+    echo "==> BUILD automatycznie pobierze: $LATEST_VERSION"
+  elif [ "$CURRENT" = "$(echo $LATEST_VERSION | grep -oP '^[0-9]+\.[0-9]+\.[0-9]+')" ]; then
+    echo "==> Jesteś na najnowszej wersji ($CURRENT)"
+  else
+    echo "==> Dostępna nowa wersja: $CURRENT -> $LATEST_VERSION"
+    exit 2
+  fi
 fi
-
-# Commit i push
-git -C "$REPO_DIR" add Dockerfile
-git -C "$REPO_DIR" commit -m "chore: update Antigravity to ${VERSIONS}"
-git -C "$REPO_DIR" push origin main
-
-echo "==> Zaktualizowano i pushowano Antigravity ${VERSIONS}"
