@@ -4,9 +4,21 @@ export LD_LIBRARY_PATH="/opt/antigravity:${LD_LIBRARY_PATH}"
 
 BIN=/opt/antigravity/antigravity
 
-# Wayland check
+# Wayland check — verify actual Wayland prerequisites, not just labwc process
+# labwc may run as WM inside Selkies VNC without exposing a Wayland display
+WAYLAND=""
 if pgrep labwc > /dev/null 2>&1; then
-  WAYLAND="--ozone-platform=wayland"
+  # Check for Wayland socket (WAYLAND_DISPLAY or default location)
+  WAYLAND_SOCKET=""
+  if [ -n "$WAYLAND_DISPLAY" ]; then
+    WAYLAND_SOCKET="${XDG_RUNTIME_DIR:-/tmp}/$WAYLAND_DISPLAY"
+  elif [ -S "${XDG_RUNTIME_DIR:-/tmp}/wayland-0" ]; then
+    WAYLAND_SOCKET="${XDG_RUNTIME_DIR:-/tmp}/wayland-0"
+  fi
+
+  if [ -n "$WAYLAND_SOCKET" ] && [ -S "$WAYLAND_SOCKET" ] && [ -d /dev/dri ]; then
+    WAYLAND="--ozone-platform=wayland"
+  fi
 fi
 
 dbus-launch ${BIN} \
