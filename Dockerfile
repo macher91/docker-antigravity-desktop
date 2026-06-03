@@ -28,7 +28,6 @@ RUN \
     chromium-l10n \
     git \
     gnome-keyring \
-    gtk3-engines-breeze \
     libgtk-3-0 \
     ssh-askpass \
     stterm && \
